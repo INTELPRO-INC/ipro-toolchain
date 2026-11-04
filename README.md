@@ -4,37 +4,45 @@ RISC-V GCC cross-compiler (`riscv64-unknown-elf-`) for building IPRO SDK firmwar
 
 | System | 14.2.1-20240816 | 13.1.1-20230713 |
 |---|---|---|
-| Windows x64 | not available yet | [`IPRO-toolchain-win32-13.1.1-20230713.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v13.1.1-20230713/IPRO-toolchain-win32-13.1.1-20230713.zip) (366 MB) |
+| Windows x64 | [`IPRO-toolchain-win32-14.2.1-20240816.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v14.2.1-20240816/IPRO-toolchain-win32-14.2.1-20240816.zip) (409 MB) | [`IPRO-toolchain-win32-13.1.1-20230713.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v13.1.1-20230713/IPRO-toolchain-win32-13.1.1-20230713.zip) (366 MB) |
 | macOS, Apple silicon, macOS 26 or later | [`IPRO-toolchain-macos-arm64-14.2.1-20240816.tar.gz`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v14.2.1-20240816/IPRO-toolchain-macos-arm64-14.2.1-20240816.tar.gz) (375 MB) | not available |
 | Linux x86-64 | [`IPRO-toolchain-linux-x64-14.2.1-20240816.tar.gz`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v14.2.1-20240816/IPRO-toolchain-linux-x64-14.2.1-20240816.tar.gz) (1.3 GB) | [`IPRO-toolchain-linux-x64-13.1.1-20230713.tar.gz`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v13.1.1-20230713/IPRO-toolchain-linux-x64-13.1.1-20230713.tar.gz) (860 MB) |
 
-**Which version.** IPRO SDK V2.x is built with GCC 14: use 14.2.1 on macOS and Linux. On Windows, 13.1.1 is the only build so far; install it with Online Setup (**Full environment**), which also prepares the SDK for it. IPRO SDK 1.2.1 pairs with 13.1.1.
+**Which version.** IPRO SDK V2.x is built with GCC 14: use 14.2.1. IPRO SDK 1.2.1 pairs with 13.1.1.
+
+On Windows, [IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) still installs 13.1.1 (**Full environment**) and prepares the SDK for it. The Windows 14.2.1 build names the IPRO7 tuning model `ipro-7-series` instead of `intelpro-ipro7` (the generated code is the same). IPRO SDK V2.2.0 looks only for `intelpro-ipro7`, so with the Windows 14.2.1 build it compiles with the standard RISC-V options, without the IPRO7 DSP extensions; for V2.2.0 with the DSP extensions on Windows, use 13.1.1.
 
 ## Windows
 
-[IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) installs this toolchain for you. To install it by hand:
+The steps below install 14.2.1. For 13.1.1, use [`IPRO-toolchain-win32-13.1.1-20230713.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v13.1.1-20230713/IPRO-toolchain-win32-13.1.1-20230713.zip) (SHA-256 `3D37453878F1CA336FF76272FE254CC7357D28C3E0CDDA77C7F3647E0B85B286`, first line of `--version` ends with `13.1.1 20230713`) in the same steps.
 
-1. Download [`IPRO-toolchain-win32-13.1.1-20230713.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v13.1.1-20230713/IPRO-toolchain-win32-13.1.1-20230713.zip) (366 MB).
+1. Download [`IPRO-toolchain-win32-14.2.1-20240816.zip`](https://github.com/INTELPRO-INC/ipro-toolchain/releases/download/v14.2.1-20240816/IPRO-toolchain-win32-14.2.1-20240816.zip) (409 MB).
 2. In PowerShell, in the download folder, check the file:
 
    ```powershell
-   (Get-FileHash .\IPRO-toolchain-win32-13.1.1-20230713.zip -Algorithm SHA256).Hash
+   (Get-FileHash .\IPRO-toolchain-win32-14.2.1-20240816.zip -Algorithm SHA256).Hash
    ```
 
-   You should see `3D37453878F1CA336FF76272FE254CC7357D28C3E0CDDA77C7F3647E0B85B286`.
-3. Extract it to `C:\IPRO\toolchain`:
+   You should see `B6880D1144FF88B7137B831EE2D623217A7837917BA33409B65DCB66821A427A`.
+3. Both versions extract to the same folder, `C:\IPRO\toolchain\riscv_ipro7_win32`. If it already exists (an earlier toolchain), rename it first, for example:
 
    ```powershell
-   Expand-Archive .\IPRO-toolchain-win32-13.1.1-20230713.zip -DestinationPath C:\IPRO\toolchain
+   Rename-Item C:\IPRO\toolchain\riscv_ipro7_win32 riscv_ipro7_win32_old
    ```
 
-4. Check it:
+4. Extract the file to `C:\IPRO\toolchain`:
+
+   ```powershell
+   Expand-Archive .\IPRO-toolchain-win32-14.2.1-20240816.zip -DestinationPath C:\IPRO\toolchain
+   ```
+
+5. Check it:
 
    ```powershell
    C:\IPRO\toolchain\riscv_ipro7_win32\bin\riscv64-unknown-elf-gcc.exe --version
    ```
 
-   The first line ends with `13.1.1 20230713`.
+   The first line ends with `14.2.1 20240816`.
 
 For the VS Code Extension, set `ipro.toolchainPath` to `C:\IPRO\toolchain\riscv_ipro7_win32\bin\riscv64-unknown-elf-`.
 
@@ -107,7 +115,7 @@ To keep the toolchain somewhere else, pass the prefix on every build: `make -C <
 ## Where the packages are published
 
 Each version is a release of this repository with the packages and `SHA256SUMS.txt`.
-The Windows package is also kept, byte for byte, in the IPRO-SDK release [components-2026.09.09](https://github.com/INTELPRO-INC/IPRO-SDK/releases/tag/components-2026.09.09): the current versions of [IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) download it from there, so that release stays unchanged.
+The Windows 13.1.1 package is also kept, byte for byte, in the IPRO-SDK release [components-2026.09.09](https://github.com/INTELPRO-INC/IPRO-SDK/releases/tag/components-2026.09.09): the current versions of [IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) download it from there, so that release stays unchanged.
 
 ## License
 
@@ -115,7 +123,7 @@ GCC, binutils and GDB are under the GNU General Public License; newlib is under 
 
 ## 繁體中文
 
-這個 repo 發佈 RISC-V 工具鏈，支援 Windows、macOS、Linux（各系統目前有的版本見上表）。Windows 一般用 [IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) 安裝即可。手動安裝時照上面各系統的步驟：下載、核對 SHA-256、解壓到 `C:\IPRO\toolchain`（Windows）或 `/opt/toolchain`（macOS／Linux），再執行檢查指令。macOS 若用瀏覽器下載，解壓前先執行 `xattr -d com.apple.quarantine <檔名>`。完整說明見[文件站](https://intelpro-inc.github.io/ipro-sdk-docs/)。
+這個 repo 發佈 RISC-V 工具鏈，Windows、macOS、Linux 都有 14.2.1（各系統的版本見上表）。Windows 一般用 [IPRO SDK Online Setup](https://github.com/INTELPRO-INC/ipro-sdk-releases) 安裝即可，它目前裝的是 13.1.1。Windows 版 14.2.1 的 IPRO7 調校模型名稱是 `ipro-7-series`，IPRO SDK V2.2.0 只認 `intelpro-ipro7`，所以搭配 V2.2.0 時會用標準 RISC-V 選項編譯、不啟用 IPRO7 DSP 擴充；要在 Windows 上用 DSP 擴充編譯 V2.2.0，請用 13.1.1。手動安裝時照上面各系統的步驟：下載、核對 SHA-256、解壓到 `C:\IPRO\toolchain`（Windows；資料夾已存在時先改名）或 `/opt/toolchain`（macOS／Linux），再執行檢查指令。macOS 若用瀏覽器下載，解壓前先執行 `xattr -d com.apple.quarantine <檔名>`。完整說明見[文件站](https://intelpro-inc.github.io/ipro-sdk-docs/)。
 
 ## Related
 
